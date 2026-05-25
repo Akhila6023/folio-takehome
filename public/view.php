@@ -13,6 +13,29 @@ $stmt = db()->prepare('
 ');
 $stmt->execute([$token]);
 $doc = $stmt->fetch();
+if (
+    $doc &&
+    !empty($doc['publish_at']) &&
+    strtotime($doc['publish_at']) > time()
+) {
+
+    render_header('Not Yet Available');
+    ?>
+
+    <div class="centered-message">
+        <h1>Document not yet available</h1>
+
+        <p>
+            This document is scheduled for future publishing.
+        </p>
+    </div>
+
+    <?php
+
+    render_footer();
+
+    exit;
+}
 
 if (!$doc) {
     http_response_code(404);
